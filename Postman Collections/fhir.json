@@ -1,0 +1,650 @@
+{
+	"info": {
+		"_postman_id": "26f18c67-8311-4405-a9a6-c3e5b3625462",
+		"name": "FHIR Resourses",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Pateintdata",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0bfb9ffd-b3ff-42e7-95f1-56369e879375",
+						"exec": [
+							"pm.test(\"Status code is 201 Created\", () => pm.response.to.have.status(201));\r",
+							"pm.test(\"Extract Patient ID\", () => {\r",
+							"    let res = pm.response.json();\r",
+							"    pm.expect(res.resourceType).to.equal(\"Patient\");\r",
+							"    pm.globals.set(\"patient_id\", res.id); // Saves for subsequent chain requests\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "5f1c9456-f6e9-4d2b-ac6b-02acff39c3ed",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/fhir+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"resourceType\":\"Patient\",\r\n\"active\":true,\r\n\"name\":[{\"use\":\"Officail\",\"family\": \"kendre\", \"given\": [\"santosh\", \"D\"] }],\r\n\"gender\":\"male\",\r\n\"birthDate\": \"1985-05-14\",\r\n  \"identifier\": [{ \"system\": \"http://hospital.org\", \"value\": \"MRN-99482\" }]\r\n}\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{Fhir_url}}/Patient"
+			},
+			"response": []
+		},
+		{
+			"name": "Read Patient Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d6861bd8-3fcf-47ea-80e1-258fe5996e1c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Status code is 200 OK\", () => pm.response.to.have.status(200));\r",
+							"pm.test(\"Validate Patient Structure\", () => {\r",
+							"    let res = pm.response.json();\r",
+							"    pm.expect(res.resourceType).to.equal(\"Patient\");\r",
+							"    pm.expect(res.name[0].family).to.equal(\"kendre\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "6b581828-08fc-4e45-97a1-528362fb6419",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{Fhir_url}}/Patient/{{patient_id}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Encounter",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7999820a-d276-42cc-ac47-2f487f789844",
+						"exec": [
+							"pm.test(\"Encounter Created 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Encounter has correct patient_id\", function () {\r",
+							"pm.globals.set(\"encounter_id\", pm.response.json().id)});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "75a97788-b363-4741-a22b-81382cf99220",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resourceType\": \"Encounter\",\r\n  \"status\": \"in-progress\",\r\n  \"class\": {\r\n    \"system\": \"http://hl7.org\",\r\n    \"code\": \"AMB\",\r\n    \"display\": \"ambulatory\"\r\n  },\r\n  \"subject\": { \"reference\": \"Patient/{{patient_id}}\" }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{Fhir_url}}/Patient//Encounter"
+			},
+			"response": []
+		},
+		{
+			"name": "Read Encounter Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "540137a3-c670-4739-939a-c792c8272290",
+						"exec": [
+							"pm.test(\"Validate Encounter Reference\", () => {\r",
+							"    let res = pm.response.json();\r",
+							"    pm.expect(res.subject.reference).to.equal(\"Patient/\" + pm.collectionVariables.get(\"patient_id\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "51b98b80-a165-43e3-8a42-1d771a727fcf",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/fhir+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{Fhir_url}}/Encounter/{{encounter_id}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Record Laboratory Observation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b1765190-df42-4f4c-9800-f53dab2b4c86",
+						"exec": [
+							"// Check that the engine completed the processing run safely\r",
+							"pm.test(\"Validation Service Responded\", () => pm.response.to.have.status(200));\r",
+							"\r",
+							"pm.test(\"Catch Terminology and Schema Errors\", () => {\r",
+							"    let res = pm.response.json();\r",
+							"    \r",
+							"    // 1. Confirm the server responded with the correct FHIR specification envelope\r",
+							"    pm.expect(res.resourceType).to.equal(\"OperationOutcome\");\r",
+							"    \r",
+							"    // 2. Filter for specific errors regarding terminology or code system bindings\r",
+							"    let structuralErrors = res.issue.filter(issue => {\r",
+							"        let isHighSeverity = (issue.severity === 'error' || issue.severity === 'fatal');\r",
+							"        \r",
+							"        // Check if the diagnostics text mentions code, terminology, loinc, or binding issues\r",
+							"        let diagnosticsText = (issue.diagnostics || \"\").toLowerCase();\r",
+							"        let isTerminologyError = diagnosticsText.includes(\"code\") || \r",
+							"                                  diagnosticsText.includes(\"loinc\") || \r",
+							"                                  diagnosticsText.includes(\"terminology\");\r",
+							"                                  \r",
+							"        return isHighSeverity && isTerminologyError;\r",
+							"    });\r",
+							"    \r",
+							"    // 3. Assert that the validation engine caught the bad LOINC code string\r",
+							"    pm.expect(structuralErrors.length, \"Expected server to throw a terminology error for the invalid LOINC code, but none were caught.\").to.be.above(0);\r",
+							"    \r",
+							"    // 4. Output the exact error message to the console for easier bug triage\r",
+							"    console.log(\"Expected Terminology Error Details:\", JSON.stringify(structuralErrors, null, 2));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "85605264-ae48-4bed-af47-fd16dba61a85",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    //(Mapping your T1 Allergen Test)\r\n  \"resourceType\": \"Observation\",\r\n  \"status\": \"final\",\r\n  \"category\": [{\r\n    \"coding\": [{ \"system\": \"http://hl7.org\", \"code\": \"laboratory\" }]\r\n  }],\r\n  \"code\": {\r\n    \"coding\": [{ \"system\": \"http://loinc.org\", \"code\": \"6077-2\", \"display\": \"Box elder IgE Ab [Units/Volume] in Serum\" }]\r\n  },\r\n  \"subject\": { \"reference\": \"Patient/{{patient_id}}\" },\r\n  \"encounter\": { \"reference\": \"Encounter/{{encounter_id}}\" },\r\n  \"valueQuantity\": { \"value\": 0.35, \"unit\": \"kU/L\", \"system\": \"http://unitsofmeasure.org\", \"code\": \"kU/L\" }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{Fhir_url}}/Observation"
+			},
+			"response": []
+		},
+		{
+			"name": "Query Observation History",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5b139481-7e26-446a-a122-d02bf8ba918c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Verify Search Bundle returning matching LOINC\", () => {\r",
+							"    let res = pm.response.json();\r",
+							"    pm.expect(res.resourceType).to.equal(\"Bundle\");\r",
+							"    pm.expect(res.entry[0].resource.code.coding[0].code).to.equal(\"6077-2\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "93ee23a2-9cc6-4c7f-870d-9ecc6991cce9",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Fhir_url}}/Observation?patient/{{patient_id}}&code=http://loinc.org|6077-2",
+					"host": [
+						"{{Fhir_url}}"
+					],
+					"path": [
+						"Observation"
+					],
+					"query": [
+						{
+							"key": "patient/{{patient_id}}",
+							"value": null
+						},
+						{
+							"key": "code",
+							"value": "http://loinc.org|6077-2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Active Diagnoses",
+			"id": "040abc8b-f898-495f-884d-061a78a6e5c6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Fhir_url}}/Condition?patient={{patient_id}}&clinical-status=active",
+					"host": [
+						"{{Fhir_url}}"
+					],
+					"path": [
+						"Condition"
+					],
+					"query": [
+						{
+							"key": "patient",
+							"value": "{{patient_id}}"
+						},
+						{
+							"key": "clinical-status",
+							"value": "active"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"id": "83d9a147-2153-4e83-8e57-72f7b0b31668",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resourceType\": \"Medication\",\r\n  \"code\": {\r\n    \"coding\": [{ \"system\": \"http://nih.gov\", \"code\": \"1044432\", \"display\": \"Cetirizine Hydrochloride 10 MG Oral Tablet\" }]\r\n  },\r\n  \"form\": {\r\n    \"coding\": [{ \"system\": \"http://snomed.info\", \"code\": \"385055001\", \"display\": \"Tablet dose form\" }]\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{fhir_url}}/Medication"
+			},
+			"response": []
+		},
+		{
+			"name": "Search Medication Item",
+			"id": "53f0f590-a444-4d4b-917e-cf51e423b47e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{fhir_url}}/Medication?code=http://nih.gov|1044432",
+					"host": [
+						"{{fhir_url}}"
+					],
+					"path": [
+						"Medication"
+					],
+					"query": [
+						{
+							"key": "code",
+							"value": "http://nih.gov|1044432"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Condition Resource (Diagnosis)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ed293a6-40fc-4ca9-83e7-68b9106219ed",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "14ea6748-94f2-4969-80c2-69dbfbda966e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "// Add Medical Condition\r\n{\r\n  \"resourceType\": \"Condition\",\r\n  \"clinicalStatus\": {\r\n    \"coding\": [{ \"system\": \"http://hl7.org\", \"code\": \"active\" }]\r\n  },\r\n  \"verificationStatus\": {\r\n    \"coding\": [{ \"system\": \"http://hl7.org\", \"code\": \"confirmed\" }]\r\n  },\r\n  \"code\": {\r\n    \"coding\": [{ \"system\": \"http://hl7.org\", \"code\": \"J30.1\", \"display\": \"Allergic rhinitis due to pollen\" }]\r\n  },\r\n  \"subject\": { \"reference\": \"Patient/{{patient_id}}\" }\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{Fhir_url}}/Condition"
+			},
+			"response": []
+		},
+		{
+			"name": "Procedure Resource",
+			"id": "4910e157-ddc0-475f-9b3f-169c18e92e9e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "//Log Clinical Procedure\r\n{\r\n  \"resourceType\": \"Procedure\",\r\n  \"status\": \"completed\",\r\n  \"code\": {\r\n    \"coding\": [{ \"system\": \"http://snomed.info\", \"code\": \"423161005\", \"display\": \"Allergy skin prick test\" }]\r\n  },\r\n  \"subject\": { \"reference\": \"Patient/{{patient_id}}\" },\r\n  \"encounter\": { \"reference\": \"Encounter/{{encounter_id}}\" },\r\n  \"performedDateTime\": \"2026-05-27T10:00:00Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{fhir_url}}/Procedure"
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Performed Procedures",
+			"id": "4c2ba72f-1305-4673-8e66-3c02132f6f56",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{fhir_url}}/Procedure?encounter=Encounter/{{encounter_id}}",
+					"host": [
+						"{{fhir_url}}"
+					],
+					"path": [
+						"Procedure"
+					],
+					"query": [
+						{
+							"key": "encounter",
+							"value": "Encounter/{{encounter_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Coverage Resource (Insurance Policy)",
+			"id": "5a39cf94-208e-498a-84b7-6cce0e6e158b",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resourceType\": \"Coverage\",\r\n  \"status\": \"active\",\r\n  \"type\": {\r\n    \"coding\": [{ \"system\": \"http://hl7.org\", \"code\": \"EHCPOL\", \"display\": \"extended healthcare policy\" }]\r\n  },\r\n  \"subscriberId\": \"SUB-883711\",\r\n  \"beneficiary\": { \"reference\": \"Patient/{{patient_id}}\" },\r\n  \"relationship\": {\r\n    \"coding\": [{ \"system\": \"http://hl7.org\", \"code\": \"self\" }]\r\n  },\r\n  \"payor\": [{ \"display\": \"Blue Cross Insurance Co\" }]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "POST {{fhir_url}}/Coverage"
+			},
+			"response": []
+		},
+		{
+			"name": "Read Insurance Status",
+			"id": "9db67b16-ccfd-46ec-94cd-7202bd9e3696",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "GET {{fhir_url}}/Coverage?beneficiary=Patient/{{patient_id}}&status=active",
+					"host": [
+						"GET {{fhir_url}}"
+					],
+					"path": [
+						"Coverage"
+					],
+					"query": [
+						{
+							"key": "beneficiary",
+							"value": "Patient/{{patient_id}}"
+						},
+						{
+							"key": "status",
+							"value": "active"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Claim Resource",
+			"id": "ed6ae6c8-b27b-4993-9c31-ea4cfd292c17",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resourceType\": \"Claim\",\r\n  \"status\": \"active\",\r\n  \"type\": {\r\n    \"coding\": [{ \"system\": \"http://hl7.org\", \"code\": \"institutional\" }]\r\n  },\r\n  \"use\": \"claim\",\r\n  \"patient\": { \"reference\": \"Patient/{{patient_id}}\" },\r\n  \"created\": \"2026-05-27T12:00:00Z\",\r\n  \"provider\": { \"display\": \"Main Street Clinic\" },\r\n  \"insurer\": { \"display\": \"Blue Cross Insurance Co\" },\r\n  \"insurance\": [{\r\n    \"sequence\": 1,\r\n    \"focal\": true,\r\n    \"coverage\": { \"display\": \"Coverage Reference Linked\" }\r\n  }],\r\n  \"item\": [{\r\n    \"sequence\": 1,\r\n    \"productOrService\": {\r\n      \"coding\": [{ \"system\": \"http://ama-assn.org\", \"code\": \"95004\", \"display\": \"Percutaneous allergy skin tests\" }]\r\n    }\r\n  }]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{fhir_url}}/Claim"
+			},
+			"response": []
+		},
+		{
+			"name": "Pull Claim Audits",
+			"id": "d4875f00-5707-43c1-b80a-37eebb60a121",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{fhir_url}}/Claim?patient=Patient/{{patient_id}}",
+					"host": [
+						"{{fhir_url}}"
+					],
+					"path": [
+						"Claim"
+					],
+					"query": [
+						{
+							"key": "patient",
+							"value": "Patient/{{patient_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dry-Run Profile Strict Validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "eff1a27f-4aab-40ac-a0e4-3dc035e4e6de",
+						"exec": [
+							"pm.test(\"Validation Operation Complete\", () => pm.response.to.have.status(200));\r",
+							"pm.test(\"Confirm No Structural Blocks Detected\", () => {\r",
+							"    let res = pm.response.json();\r",
+							"    pm.expect(res.resourceType).to.equal(\"OperationOutcome\");\r",
+							"    \r",
+							"    // Filter out the actual errors to print them cleanly if the test fails\r",
+							"    let errors = res.issue.filter(i => i.severity === 'error' || i.severity === 'fatal');\r",
+							"    \r",
+							"    // Provide an explicit, readable error message in the test log\r",
+							"    pm.expect(errors.length, `Found ${errors.length} validation error(s): ${JSON.stringify(errors)}`).to.equal(0);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"id": "136d041f-a233-47a0-8257-b253b83e0ac3",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "//System Workflow Validation Blueprint ($validate)\r\n//Before writing database records, you must verify that payloads pass profile //rules without processing state alterations.",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{fhir_url}}/Patient/$validate"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "d960464d-1cff-4ee6-8276-8fc4dc3e63a3",
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c4fa8c56-2a46-4909-aa56-38027c34ee6c",
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Fhir_url",
+			"value": ""
+		}
+	]
+}
