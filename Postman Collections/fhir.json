@@ -155,7 +155,7 @@
 							"    let res = pm.response.json();\r",
 							"\r",
 							"    pm.expect(res.subject.reference).to.equal(\"Patient/\" + pm.globals.get(\"patient_id\"));\r",
-							"    pm.expect(res.encounter_id).to.equal(pm.globals.get(\"encounter_id\")\r",
+							"    pm.expect(res.id).to.equal(pm.globals.get(\"encounter_id\"));\r",
 							"});\r",
 							""
 						],
