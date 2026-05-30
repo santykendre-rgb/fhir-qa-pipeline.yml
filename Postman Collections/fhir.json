@@ -132,14 +132,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"resourceType\": \"Encounter\",\r\n  \"status\": \"in-progress\",\r\n  \"class\": {\r\n    \"system\": \"http://hl7.org\",\r\n    \"code\": \"AMB\",\r\n    \"display\": \"ambulatory\"\r\n  },\r\n  \"subject\": { \"reference\": \"Patient/{{patient_id}}\" }\r\n}",
+					"raw": "\r\n{\r\n  \"resourceType\": \"Encounter\",\r\n  \"id\": \"135197687\",\r\n  \"meta\": {\r\n    \"versionId\": \"1\",\r\n    \"lastUpdated\": \"2026-05-30T07:42:48.392+00:00\",\r\n    \"source\": \"#WxndHx9quyr6HBrh\"\r\n  },\r\n\r\n\r\n\r\n  \"status\": \"Inprogress\",\r\n  \"class\": {\r\n    \"system\": \"http://hl7.org\",\r\n    \"code\": \"AMB\",\r\n    \"display\": \"ambulatory\"\r\n  },\r\n  \"subject\": { \"reference\": \"Patient/{{patient_id}}\" }\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "{{Fhir_url}}/Patient//Encounter"
+				"url": "{{Fhir_url}}/Encounter"
 			},
 			"response": []
 		},
