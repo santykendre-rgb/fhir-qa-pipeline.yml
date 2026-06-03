@@ -416,14 +416,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"resourceType\": \"Medication\",\r\n  \"code\": {\r\n    \"coding\": [{ \"system\": \"http://nih.gov\", \"code\": \"1044432\", \"display\": \"Cetirizine Hydrochloride 10 MG Oral Tablet\" }]\r\n  },\r\n  \"form\": {\r\n    \"coding\": [{ \"system\": \"http://snomed.info\", \"code\": \"385055001\", \"display\": \"Tablet dose form\" }]\r\n  }\r\n}\r\n",
+					"raw": "{\r\n  \"resourceType\": \"Medication\",\r\n   \"id\": \"135206584\",\r\n  \"code\": {\r\n    \"coding\": [{ \"system\": \"http://nih.gov\", \"code\": \"1044432\", \"display\": \"Cetirizine Hydrochloride 10 MG Oral Tablet\" }]\r\n  },\r\n  \"form\": {\r\n    \"coding\": [{ \"system\": \"http://snomed.info\", \"code\": \"385055001\", \"display\": \"Tablet dose form\" }]\r\n  }\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "{{Fhir_url}}edication"
+				"url": "{{Fhir_url}}/MedicationRequest"
 			},
 			"response": []
 		},
