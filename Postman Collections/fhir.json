@@ -233,7 +233,7 @@
 						"id": "b1765190-df42-4f4c-9800-f53dab2b4c86",
 						"exec": [
 							"// Check that the engine completed the processing run safely\r",
-							"pm.test(\"Validation Service Responded\", () => pm.response.to.have.status(200));\r",
+							"pm.test(\"Validation Service Responded\", () => pm.response.to.have.status(201));\r",
 							"\r",
 							"pm.test(\"Catch Terminology and Schema Errors\", () => {\r",
 							"    let res = pm.response.json();\r",
