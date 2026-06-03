@@ -657,9 +657,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{fhir_url}}/Procedure?encounter=Encounter/{{encounter_id}}",
+					"raw": "{{Fhir_url}}/Procedure?encounter=Encounter/{{encounter_id}}",
 					"host": [
-						"{{fhir_url}}"
+						"{{Fhir_url}}"
 					],
 					"path": [
 						"Procedure"
