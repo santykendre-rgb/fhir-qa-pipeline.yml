@@ -423,7 +423,7 @@
 						}
 					}
 				},
-				"url": "{{fhir_url}}/Medication"
+				"url": "{{Fhir_url}}edication"
 			},
 			"response": []
 		},
