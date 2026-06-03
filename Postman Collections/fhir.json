@@ -550,7 +550,7 @@
 							"\r",
 							"const body = pm.response.json();\r",
 							"\r",
-							"pm.test(\"Chained Search: Returns Condition resources linked to patient named Santosh\", () => {\r",
+							"pm.test(\"Chained Search: Returns Condition resources linked to patient named \", () => {\r",
 							"    pm.expect(body.resourceType).to.equal(\"Bundle\");\r",
 							"    pm.expect(body.entry).to.be.an('array').and.not.empty;\r",
 							"\r",
