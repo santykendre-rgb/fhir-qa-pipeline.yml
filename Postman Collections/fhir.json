@@ -326,6 +326,12 @@
 							"    });",
 							"",
 							"    pm.expect(structuralerror).to.be.an(\"array\").that.is.empty;",
+							"",
+							"    pm.expect(structuralerror.length, \"Expected server to throw a terminology error for the invalid LOINC code, but none were caught.\").to.be.above(0);",
+							"    ",
+							"    // 4. Output the exact error message to the console for easier bug triage",
+							"    console.log(\"Expected Terminology Error Details:\",",
+							"     JSON.stringify(structuralError, null, 2));",
 							"});"
 						],
 						"type": "text/javascript",
