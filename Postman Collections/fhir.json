@@ -303,6 +303,9 @@
 							"pm.test(\"Verify Search Bundle returning matching LOINC\", () => {\r",
 							"    let res = pm.response.json();\r",
 							"    pm.expect(res.resourceType).to.equal(\"Bundle\");\r",
+							"    pm.expect(res.event).to.be.an('array').not.to.be.empty;\r",
+							"\r",
+							"    \r",
 							"    pm.expect(res.entry[0].resource.code.coding[0].code).to.equal(\"6077-2\");\r",
 							"});\r",
 							""
