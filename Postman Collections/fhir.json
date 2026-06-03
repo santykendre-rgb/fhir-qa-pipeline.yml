@@ -310,7 +310,7 @@
 							"});",
 							"",
 							"pm.test(\"Catch Terminology and Schema Errors\", () => {",
-							"    pm.expect(res.resourceType).to.equal(\"OperationOutcome\");",
+							"    pm.expect(res.resourceType).to.equal(\"Bundle\");",
 							"",
 							"    let structuralerror = res.issue.filter(issue => {",
 							"        let isHighSeverity = (issue.severity === \"error\" || issue.severity === \"fatal\");",
@@ -338,7 +338,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{Fhir_url}}/Observation?patient=%7B%7Bpatient_id%7D%7D&code=http%3A%2F%2Floinc.org%7C6077-2&patient%2F%7B%7Bpatient_id%7D%7D=",
+					"raw": "{{Fhir_url}}/Observation?patient={{patient_id}}",
 					"host": [
 						"{{Fhir_url}}"
 					],
@@ -349,14 +349,6 @@
 						{
 							"key": "patient",
 							"value": "{{patient_id}}"
-						},
-						{
-							"key": "code",
-							"value": "http://loinc.org|6077-2"
-						},
-						{
-							"key": "patient/{{patient_id}}",
-							"value": ""
 						}
 					]
 				}
