@@ -406,7 +406,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "Medication",
 			"id": "83d9a147-2153-4e83-8e57-72f7b0b31668",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
