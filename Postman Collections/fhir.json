@@ -297,35 +297,31 @@
 					"script": {
 						"id": "5b139481-7e26-446a-a122-d02bf8ba918c",
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"  let res = pm.response.json();\r",
-							"pm.test(\"Verify Search Bundle returning matching LOINC\", () => {\r",
-							"  \r",
-							"    pm.expect(res.resourceType).to.equal(\"Bundle\");\r",
-							" \r",
-							"    pm.expect(res.event).to.be.an('array').not.to.be.empty;\r",
-							"\r",
-							"\r",
-							"    pm.expect(res.entry[0].resource.code.coding[0].code).to.equal(\"6077-2\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Catch Terminology and Schema Errors\", () => {\r",
-							"  \r",
-							"    pm.expect(res.resourceType).to.equal(\"OperationOutcome\");\r",
-							"\r",
-							"    let structuralerror=res.issues.filter(issues=>{\r",
-							"        let isHighSeverity=(issues=>issues.severity===\"error\" || issues.severity===\"fatal\")\r",
-							"\r",
-							"        let diagnosticsText=(issues.diagnostics || \"\").toLowerCase();\r",
-							"        let isTerminologyError= diagnosticsText.includes(\"code\") || \r",
-							"                                  diagnosticsText.includes(\"loinc\") || \r",
-							"                                  diagnosticsText.includes(\"terminology\");\r",
-							"                                  \r",
-							"        return isHighSeverity && isTerminologyError;\r",
-							"    });\r",
-							" \r",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let res = pm.response.json();",
+							"",
+							"pm.test(\"Verify Search Bundle returning matching LOINC\", () => {",
+							"    pm.expect(res.resourceType).to.equal(\"Bundle\");",
+							"    pm.expect(res.entry).to.be.an('array').not.to.be.empty;",
+							"    pm.expect(res.entry[0].resource.code.coding[0].code).to.equal(\"6077-2\");",
+							"});",
+							"",
+							"pm.test(\"Catch Terminology and Schema Errors\", () => {",
+							"    pm.expect(res.resourceType).to.equal(\"OperationOutcome\");",
+							"",
+							"    let structuralerror = res.issue.filter(issue => {",
+							"        let isHighSeverity = (issue.severity === \"error\" || issue.severity === \"fatal\");",
+							"",
+							"        let diagnosticsText = (issue.diagnostics || \"\").toLowerCase();",
+							"        let isTerminologyError = diagnosticsText.includes(\"code\") ||",
+							"                                  diagnosticsText.includes(\"loinc\") ||",
+							"                                  diagnosticsText.includes(\"terminology\");",
+							"",
+							"        return isHighSeverity && isTerminologyError;",
+							"    });",
 							"});"
 						],
 						"type": "text/javascript",
@@ -342,7 +338,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{Fhir_url}}/Observation?patient/{{patient_id}}&code=http://loinc.org|6077-2",
+					"raw": "{{Fhir_url}}/Observation?patient=%7B%7Bpatient_id%7D%7D&code=http%3A%2F%2Floinc.org%7C6077-2&patient%2F%7B%7Bpatient_id%7D%7D=",
 					"host": [
 						"{{Fhir_url}}"
 					],
@@ -351,12 +347,16 @@
 					],
 					"query": [
 						{
-							"key": "patient/{{patient_id}}",
-							"value": null
+							"key": "patient",
+							"value": "{{patient_id}}"
 						},
 						{
 							"key": "code",
 							"value": "http://loinc.org|6077-2"
+						},
+						{
+							"key": "patient/{{patient_id}}",
+							"value": ""
 						}
 					]
 				}
