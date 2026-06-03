@@ -479,12 +479,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{fhir_url}}/Medication?code=http://nih.gov|1044432",
+					"raw": "{{Fhir_url}}/MedicationRequest?code=http://nih.gov|1044432",
 					"host": [
-						"{{fhir_url}}"
+						"{{Fhir_url}}"
 					],
 					"path": [
-						"Medication"
+						"MedicationRequest"
 					],
 					"query": [
 						{
