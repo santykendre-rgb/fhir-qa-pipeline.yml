@@ -407,6 +407,48 @@
 		},
 		{
 			"name": "Medication",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e8059138-986f-4539-accb-3ace81be0de6",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"pm.response.to.have.status(201)\r",
+							"});\r",
+							"\r",
+							"const fhirResposne=pm.response.json();\r",
+							"\r",
+							"pm.test(\"Validate resourtype MedicationRequest\",function(){\r",
+							"\r",
+							"pm.expect(fhirResposne.resourceType).to.eql(\"MedicationRequest\");\r",
+							"pm.expect(fhirResposne.id).to.not.eql(null);\r",
+							"pm.expect(fhirResposne.status).to.be.oneOf(['active']['Hold']['Inactive']);\r",
+							"pm.expect(fhirResposne.intent).to.eql(\"order\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate patient id\",function(){\r",
+							"    const expectedPatientId=pm.globals.get(\"patient_ids\");\r",
+							"\r",
+							"    pm.expect(fhirResposne.subject.reference).to.eql((\"Patient/\" + expectedPatientId);\r",
+							"\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate RX norma feild\",function(){\r",
+							"\r",
+							" const coding = fhirResponse.medicationCodeableConcept.coding[0];\r",
+							"    pm.expect(coding.system).to.eql(\"http://nih.gov\");\r",
+							"    pm.expect(coding.code).to.not.be.undefined;\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
 			"id": "83d9a147-2153-4e83-8e57-72f7b0b31668",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
