@@ -430,7 +430,7 @@
 							"pm.test(\"Validate patient id\",function(){\r",
 							"    const expectedPatientId=pm.globals.get(\"patient_ids\");\r",
 							"\r",
-							"    pm.expect(fhirResposne.subject.reference).to.eql((\"Patient/\" + expectedPatientId);\r",
+							"    pm.expect(fhirResposne.subject.reference).to.eql(\"Patient/\" + expectedPatientId);\r",
 							"\r",
 							"});\r",
 							"\r",
@@ -458,7 +458,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"resourceType\": \"Medication\",\r\n    \"status\": \"active\",\r\n    \"intent\": \"order\",\r\n    \"subject\": { \"reference\": \"Patient/{{patient_id}}\" },\r\n     \"code\": {\r\n    \"coding\": [{ \"system\": \"http://nih.gov\", \"code\": \"1044432\", \"display\": \"Cetirizine Hydrochloride 10 MG Oral Tablet\" }]\r\n  },\r\n  \"form\": {\r\n    \"coding\": [{ \"system\": \"http://snomed.info\", \"code\": \"385055001\", \"display\": \"Tablet dose form\" }]\r\n\r\n  \r\n  }\r\n}\r\n",
+					"raw": "{\r\n  \"resourceType\": \"MedicationRequest\",\r\n  \"status\": \"active\",\r\n  \"intent\": \"order\",\r\n  \"subject\": { \r\n    \"reference\": \"Patient/{{patient_id}}\" \r\n  },\r\n  \"medicationCodeableConcept\": {\r\n    \"coding\": [\r\n      { \r\n        \"system\": \"http://nih.gov\", \r\n        \"code\": \"1044432\", \r\n        \"display\": \"Cetirizine Hydrochloride 10 MG Oral Tablet\" \r\n      }\r\n    ]\r\n  },\r\n  \"dosageInstruction\": [\r\n    {\r\n      \"doseAndRate\": [\r\n        {\r\n          \"doseQuantity\": {\r\n            \"value\": 1,\r\n            \"system\": \"http://snomed.info\",\r\n            \"code\": \"385055001\",\r\n            \"unit\": \"Tablet dose form\"\r\n          }\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
