@@ -471,6 +471,43 @@
 		},
 		{
 			"name": "Search Medication Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8285dc86-e807-44ec-9bbd-239d6de9ae99",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const res=pm.response.json();\r",
+							"pm.test(\"Response time is less than 200ms\", function () {});\r",
+							"pm.test(\"resourceType validation\",function(){\r",
+							"    pm.expect(res.resourceType).to.eql(\"Bundle\");\r",
+							"    pm.expect(res.entry[0].resource.resourceType).to.eql(\"MedicationRequest\");\r",
+							"    pm.expect(res.entry[0].resource.subject.reference).to.eql(\"Patient/135197679\");\r",
+							"});\r",
+							"pm.test(\"code validation\",function(){\r",
+							"    pm.expect(res.entry[0].resource.status).to.eql(\"active\");\r",
+							"    pm.expect(res.entry[0].resource.intent).to.eql(\"order\");\r",
+							"    pm.expect(res.entry[0].resource.medicationCodeableConcept.coding[0].display).to.eql(\"Cetirizine Hydrochloride 10 MG Oral Tablet\");\r",
+							"    pm.expect(res.entry[0].resource.medicationCodeableConcept.coding[0].system).to.eql(\"http://nih.gov\");\r",
+							"pm.expect(res.entry[0].resource.medicationCodeableConcept.coding[0].code).to.eql(\"1044432\");\r",
+							"\r",
+							"\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
 			"id": "53f0f590-a444-4d4b-917e-cf51e423b47e",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
