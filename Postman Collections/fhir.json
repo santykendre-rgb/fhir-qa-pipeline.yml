@@ -153,7 +153,38 @@
 							"});\r",
 							"\r",
 							"pm.test(\"Encounter has correct patient_id\", function () {\r",
-							"pm.globals.set(\"encounter_id\", pm.response.json().id)});"
+							"pm.globals.set(\"encounter_id\", pm.response.json().id)});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "af368d72-23cb-4e9c-b041-1f252e22904a",
+						"exec": [
+							"\r",
+							"// 1. Standard Personal PHI Data (Using Postman's Native Random Keywords)\r",
+							"pm.environment.set(\"DynamicLastName\", pm.variables.replaceIn('{{$randomLastName}}'));\r",
+							"pm.environment.set(\"DynamicPhone\", pm.variables.replaceIn('{{$randomPhoneNumber}}'));\r",
+							"pm.environment.set(\"DynamicEmail\", pm.variables.replaceIn('{{$randomEmail}}'));\r",
+							"\r",
+							"// 2. Custom Healthcare PHI Data (Using JavaScript Logic inside Postman)\r",
+							"\r",
+							"// Generates a fake Medical Record Number (MRN) format: MRN-8823471\r",
+							"const randomMRN = \"MRN-\" + Math.floor(1000000 + Math.random() * 9000000);\r",
+							"\r",
+							"pm.environment.set(\"DynamicMRN\", randomMRN);\r",
+							"\r",
+							"// Generates a fake Electronic Patient Identifier (EPI) format: EPI-9923-XYZ\r",
+							"const randomEPI = \"EPI-\" + Math.floor(1000 + Math.random() * 9000) + \"-XYZ\";\r",
+							"pm.environment.set(\"DynamicEPI\", randomEPI);\r",
+							""
 						],
 						"type": "text/javascript",
 						"packages": {},
